@@ -3,6 +3,7 @@ package at.campus02.input;
 import at.campus02.model.Supplier;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
 
 public class InputSupplier {
@@ -12,7 +13,7 @@ public class InputSupplier {
         this.scanner = scanner;
     }
 
-    public Supplier addSupplier(ArrayList< Supplier > suparr) throws Exception {
+    public Supplier addSupplier(Map<String, Supplier > suparr) throws Exception {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter the supplier details: ");
         System.out.println("Enter supplierID: ");
@@ -106,13 +107,13 @@ public class InputSupplier {
         }
 
         Supplier s1 = new Supplier(suppID, companyName, number, email, tradeLicenseNo, vatRn);
-        suparr.add(s1);
+        suparr.put(s1.getSupplierId(),s1);
         System.out.println("at.campus02.model.Supplier added successfully");
         return s1;
 
       } //Function Add Supp End
 
-    public int deleteSupplier(ArrayList < Supplier > list) {
+    public int deleteSupplier(Map <String, Supplier > list) {
       System.out.println("*** delete at.campus02.model.Supplier ***");
       System.out.println("Enter at.campus02.model.Supplier ID");
       scanner.nextLine();
@@ -135,25 +136,23 @@ public class InputSupplier {
       return -1;
     } //Function Delete Supp End
 
-    public void viewSupplier(ArrayList < Supplier > list) {
-      System.out.println("*** View at.campus02.model.Supplier ***");
-      System.out.println("Enter at.campus02.model.Supplier ID");
-      scanner.nextLine();
-      String id = scanner.nextLine();
+    public void viewSupplier(Map <String, Supplier > list) {
+        System.out.println("*** View at.campus02.model.Supplier ***");
+        System.out.println("Enter at.campus02.model.Supplier ID");
+        scanner.nextLine();
+        String id = scanner.nextLine();
 
-      //If supplier field is empty
-      if (id.isEmpty() || id.equals(" ")) {
-        System.out.println("Error: No supplier details displayed, the input field cannot be empty/blank");
-        return;
-      } //if end
-
-      for (Supplier supplier: list) {
-        if (supplier.getSupplierId().equals(id)) {
-          System.out.println("at.campus02.model.Supplier Information");
-          System.out.println(supplier.toString());
-          return;
+        //If supplier field is empty
+        if (id.isEmpty() || id.equals(" ")) {
+            System.out.println("Error: No supplier details displayed, the input field cannot be empty/blank");
+            return;
         } //if end
-      } //for end
-      System.out.println("Read/View Unsuccessful: at.campus02.model.Supplier ID does not exist");
-    } //ViewSupplier End
+
+        if (list.containsKey(id)) {
+            System.out.println("at.campus02.model.Supplier Information");
+            System.out.println(list.get(id));
+        } else {
+            System.out.println("Read/View Unsuccessful: at.campus02.model.Supplier ID does not exist");
+        }
+    }//ViewSupplier End
 }
