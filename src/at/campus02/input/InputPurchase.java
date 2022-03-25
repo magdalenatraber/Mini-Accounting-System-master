@@ -4,60 +4,41 @@ import at.campus02.model.Item;
 import at.campus02.model.Purchase;
 import at.campus02.model.Supplier;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 import java.util.Scanner;
 
 public class InputPurchase {
-  private Scanner scanner;
+  private final Scanner scanner;
+    private final  Map<Integer,Purchase> purchaseMap;
+    private final Map<String,Supplier> supplierMap;
+    private final InputHelper inputHelper;
 
-  public InputPurchase(Scanner scanner) {
-    this.scanner = scanner;
-  }
+    public InputPurchase(Scanner scanner, Map<Integer, Purchase> purchaseMap, Map<String, Supplier> supplierMap, InputHelper inputHelper) {
+        this.scanner = scanner;
+        this.purchaseMap = purchaseMap;
+        this.supplierMap = supplierMap;
+        this.inputHelper = inputHelper;
+    }
 
-  public  Purchase addPurchase(Map<Integer,Purchase> list, Map <String,Supplier> list2) throws Exception {
+    public  Purchase addPurchase() throws Exception {
       System.out.println("*** Add at.campus02.model.Purchase ***");
       System.out.println("Enter at.campus02.model.Purchase Number: ");
       // purchase number
-      scanner.nextLine();
-      String number = scanner.nextLine();
 
-      int purchaseNo = 0;
+
+
+      String number = inputHelper.readString();
+        int purchaseNo = inputHelper.readInt(1,999);
       //If input empty
-      if (number.isEmpty() || number.equals(" ")) {
-        throw new Exception("Unsuccessful. Cannot leave at.campus02.model.Purchase No field empty");
-      }
 
-      try {
-        purchaseNo = Integer.parseInt(number);
 
-        //Wrong at.campus02.model.Purchase Number format (should be a 3-digit number)
-        if (purchaseNo > 999) {
-          throw new Exception("Unsuccessful. Invalid purchase Number");
-        }
-
-        if(list.containsKey(purchaseNo)){
-            throw new Exception("Unsuccessful. at.campus02.model.Purchase order already exists");
-        }
-      }
-      //If String given for at.campus02.model.Purchase Number
-      catch (NumberFormatException e) {
-        throw new Exception("Unsuccessful. Invalid purchase Number Format");
-      }
 
       // purchase number
 
       // TRN no.
       System.out.println("Enter TRN No.");
-      int trn_number = scanner.nextInt();
-      if (trn_number <= 0) {
-        throw new Exception("Unsuccessful. TRN number should be of 6 digits");
-      }
-      int noOfDigits = String.valueOf(trn_number).length();
-      if (noOfDigits != 6) {
-        throw new Exception("Unsuccessful. TRN number should be of 6 digits");
-      }
+      int trn_number = inputHelper.readInt(100000,999999);
       //TRN no.
 
       // Date
@@ -65,74 +46,44 @@ public class InputPurchase {
       System.out.println("Enter Day: ");
       Date currentDate = new Date();
 
-      int day = scanner.nextInt();
-      if (day < 1 || day > 31) {
-        throw new Exception("Unsuccessful. Invalid purchase date.");
-      }
+      int day = inputHelper.readInt(1,31);
 
       System.out.println("Enter Month: ");
-      int month = scanner.nextInt();
-      if (month < 1 || month > 12) {
-        throw new Exception("Unsuccessful. Invalid purchase date.");
-      }
+      int month = inputHelper.readInt(1,12);
 
       System.out.println("Enter Year: ");
-      int year = scanner.nextInt();
-      if (year <= 0) {
-        throw new Exception("Unsuccessful. Invalid purchase date.");
-      }
+      int year = inputHelper.readInt(1900,2200);
 
       // Date
-      Date purchaseDate = new Date(year, month, day);
+      Date purchaseDate = new Date(year, month-1, day);
 
       // at.campus02.model.Supplier ID
       System.out.println("Enter at.campus02.model.Supplier ID");
       scanner.nextLine();
-      String id = scanner.nextLine();
+      String id = inputHelper.readString();
 
       //If supplier field is empty
-      if (id.isEmpty() || id.equals(" ")) {
-        throw new Exception("Error: No supplier details displayed, the input field cannot be empty/blank");
-      }
+
 
       // at.campus02.model.Item No
       System.out.println("Enter at.campus02.model.Item No : ");
       //sc.nextLine();
-      String itemnotemp = scanner.nextLine();
 
       //If input empty
-      if (itemnotemp.isEmpty() || itemnotemp.equals(" ")) {
-        throw new Exception("Adding at.campus02.model.Purchase Unsuccessful. ItemNo field is empty");
-      }
-      int itemno = Integer.parseInt(itemnotemp);
+
+      int itemno = inputHelper.readInt(1,Integer.MAX_VALUE);
 
       //at.campus02.model.Item quanitity
       System.out.println("Enter at.campus02.model.Item quantity : ");
-      //sc.nextLine();
-      String quanitity_temp = scanner.nextLine();
-
-      if (quanitity_temp.isEmpty() || quanitity_temp.equals(" ")) {
-        throw new Exception("Unsuccessful. Cannot leave at.campus02.model.Purchase No field empty");
-      }
-
-      int quantity;
-      try {
-        quantity = Integer.parseInt(quanitity_temp);
-      }
-      //If String given for at.campus02.model.Purchase Number
-      catch (NumberFormatException e) {
-        throw new Exception("Unsuccessful. Quantity should be in numerical values");
-      }
+      int quantity = inputHelper.readInt(1,Integer.MAX_VALUE);
 
       // at.campus02.model.Item object creation
       Item itemObject = new Item(itemno, quantity);
 
       //Payment mode
       System.out.println("Enter Payment Mode : ");
-      String mode = scanner.nextLine();
-      if (mode.isEmpty() || mode.equals(" ")) {
-        throw new Exception("Unsuccessful. Mode of payment should be entered (Blank/Empty)");
-      }
+      String mode = inputHelper.readString();
+
       if (!(mode.equals("card") || mode.equals("cheque") || mode.equals("bank transfer"))) {
         throw new Exception("Unsuccessful. Mode of payment should be either of card / cheque / bank transfer");
       }
@@ -140,24 +91,18 @@ public class InputPurchase {
       //Payment Due Date
       System.out.println("*Payment Due Date*");
       System.out.println("Enter Day: ");
-      String temp_due_day = scanner.nextLine();
-      if (temp_due_day.isEmpty() || temp_due_day.equals(" ")) {
-        throw new Exception("Unsuccessful. Payment due date should be entered");
-      }
+      String temp_due_day = inputHelper.readString();
+
       int due_day = Integer.parseInt(temp_due_day);
 
       System.out.println("Enter Month: ");
-      String temp_due_month = scanner.nextLine();
-      if (temp_due_month.isEmpty() || temp_due_month.equals(" ")) {
-        throw new Exception("Unsuccessful. Payment due date should be entered");
-      }
+      String temp_due_month = inputHelper.readString();
+
       int due_month = Integer.parseInt(temp_due_month);
 
       System.out.println("Enter Year: ");
-      String temp_due_year = scanner.nextLine();
-      if (temp_due_year.isEmpty() || temp_due_year.equals(" ")) {
-        throw new Exception("Unsuccessful. Payment due date should be entered");
-      }
+      String temp_due_year = inputHelper.readString();
+
       int due_year = Integer.parseInt(temp_due_year);
 
       Date purchaseDueDate = new Date(due_year, due_month, due_day);
@@ -168,11 +113,9 @@ public class InputPurchase {
       //total cost
       System.out.println("Enter total cost : ");
       scanner.nextLine();
-      String tempcost = scanner.nextLine();
+      String tempcost = inputHelper.readString();
 
-      if (tempcost.isEmpty() || tempcost.equals(" ")) {
-        throw new Exception("Unsuccessful. Cost of the PO should be entered");
-      }
+
       double cost = Double.parseDouble(tempcost);
 
       // vat amount
@@ -180,21 +123,18 @@ public class InputPurchase {
 
       // newPurchase Creation
       Purchase newPurchase = new Purchase(purchaseNo, trn_number, purchaseDate,
-              list2.get(id), itemObject, mode, purchaseDueDate, cost, vat);
+              supplierMap.get(id), itemObject, mode, purchaseDueDate, cost, vat);
       return newPurchase;
     }
 
-  public  Purchase removePurchase(Map <Integer, Purchase > purchaseMap) {
+  public  Purchase removePurchase() {
       System.out.println("*** Remove at.campus02.model.Purchase ***");
       System.out.println("Enter at.campus02.model.Purchase Number");
 
       scanner.nextLine();
-      String number = scanner.nextLine();
+      String number = inputHelper.readString();
       //If input empty
-      if (number.isEmpty() || number.equals(" ")) {
-        System.out.println("Unsuccessful. Cannot leave at.campus02.model.Purchase No field empty");
-        return null;
-      }
+
 
       try {
           int purchaseNo = Integer.parseInt(number);
@@ -220,18 +160,15 @@ public class InputPurchase {
       return null;
     }
 
-  public void viewPurchase(Map <Integer, Purchase > list) {
+  public void viewPurchase() {
       System.out.println("*** View at.campus02.model.Purchase ***");
       System.out.println("Enter at.campus02.model.Purchase Number");
 
       scanner.nextLine();
-      String number = scanner.nextLine();
+      String number = inputHelper.readString();
 
       //If input empty
-      if (number.isEmpty() || number.equals(" ")) {
-        System.out.println("Unsuccessful. Cannot leave at.campus02.model.Purchase No field empty");
-        return;
-      }
+
 
       try {
           int temp = Integer.parseInt(number);
@@ -242,9 +179,9 @@ public class InputPurchase {
               return;
           }
 
-          if (list.containsKey(temp)) {
+          if (purchaseMap.containsKey(temp)) {
               System.out.println("at.campus02.model.Purchase Information");
-              System.out.println(list.get(temp));
+              System.out.println(purchaseMap.get(temp));
           } else {
               System.out.println("Unsuccessful. at.campus02.model.Purchase order does not exist");
           }

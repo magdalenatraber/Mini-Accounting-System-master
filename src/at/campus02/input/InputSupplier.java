@@ -2,63 +2,53 @@ package at.campus02.input;
 
 import at.campus02.model.Supplier;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Scanner;
 
 public class InputSupplier {
     private Scanner scanner;
+    private Map<String, Supplier> supplierMap;
+    private final InputHelper inputHelper;
 
-    public InputSupplier(Scanner scanner) {
+    public InputSupplier(Scanner scanner, Map<String, Supplier> supplierMap, InputHelper inputHelper) {
         this.scanner = scanner;
+        this.supplierMap = supplierMap;
+        this.inputHelper = inputHelper;
     }
 
-    public Supplier addSupplier(Map<String, Supplier> suparr) throws Exception {
+    public Supplier addSupplier() throws Exception {
         Scanner sc = new Scanner(System.in);
         System.out.println("Enter the supplier details: ");
         System.out.println("Enter supplierID: ");
-        String suppID = sc.nextLine();
+        String suppID = inputHelper.readString();
 
 
-            if (suparr.containsKey(suppID)) {
+            if (supplierMap.containsKey(suppID)) {
                 throw new RuntimeException("Error: at.campus02.model.Supplier not added, SupplierID already exists in the system.");
             }
 
 
         //If supplier field is empty
-        if (suppID.isEmpty() || suppID.equals(" ")) {
-            throw new Exception("Error: The at.campus02.model.Supplier ID input field cannot be empty/blank");
 
-        }
 
         System.out.println("Enter companyName: ");
 
-        String companyName = sc.nextLine();
+        String companyName = inputHelper.readString();
 
-        if (companyName.isEmpty() || companyName.equals(" ")) {
-            throw new Exception("Error: at.campus02.model.Supplier not added, Company Name is left blank");
-
-        }
 
         System.out.println("Enter Contact Number: ");
-        String number = sc.nextLine();
+        String number = inputHelper.readString();
 
-        if (number.isEmpty() || number.equals(" ")) {
-            throw new Exception("Error: at.campus02.model.Supplier not added, Contact Details Number is left blank.");
 
-        }
 
         if (!(number.substring(0, 2).equals("05")) || number.length() != 10) {
             throw new Exception("Error: at.campus02.model.Supplier not added, Number needs to be of the format “05XXXXXXXX” where X are numbers.");
         }
 
         System.out.println("Enter email: ");
-        String email = sc.nextLine();
+        String email = inputHelper.readString();
 
-        if (email.isEmpty() || email.equals(" ")) {
-            throw new Exception("Error: at.campus02.model.Supplier not added, Email is left blank.");
 
-        }
 
         int atCount = 0;
         int Atindex = 0;
@@ -106,47 +96,39 @@ public class InputSupplier {
         }
 
         Supplier s1 = new Supplier(suppID, companyName, number, email, tradeLicenseNo, vatRn);
-        suparr.put(s1.getSupplierId(), s1);
+        supplierMap.put(s1.getSupplierId(), s1);
         System.out.println("at.campus02.model.Supplier added successfully");
         return s1;
 
     } //Function Add Supp End
 
-    public Supplier deleteSupplier(Map<String, Supplier> list) {
+    public Supplier deleteSupplier() {
         System.out.println("*** delete at.campus02.model.Supplier ***");
         System.out.println("Enter at.campus02.model.Supplier ID");
         scanner.nextLine();
-        String id = scanner.nextLine();
+        String id = inputHelper.readString();
 
-        //If supplier field is empty
-        if (id.isEmpty() || id.equals(" ")) {
-            System.out.println("Error: The input field cannot be empty/blank.");
-            return null;
-        } //if end
-        if (list.containsKey(id)) {
+
+        if (supplierMap.containsKey(id)) {
             System.out.println("at.campus02.model.Supplier successfully deleted");
-            return list.get(id);
+            return supplierMap.get(id);
         } else {
             System.out.println("at.campus02.model.Supplier does not exist in the database so it isn't deleted.");
             return null;
         } //Function Delete Supp End
     }
 
-    public void viewSupplier(Map <String, Supplier > list) {
+    public void viewSupplier() {
         System.out.println("*** View at.campus02.model.Supplier ***");
         System.out.println("Enter at.campus02.model.Supplier ID");
         scanner.nextLine();
-        String id = scanner.nextLine();
+        String id = inputHelper.readString();
 
-        //If supplier field is empty
-        if (id.isEmpty() || id.equals(" ")) {
-            System.out.println("Error: No supplier details displayed, the input field cannot be empty/blank");
-            return;
-        } //if end
 
-        if (list.containsKey(id)) {
+
+        if (supplierMap.containsKey(id)) {
             System.out.println("at.campus02.model.Supplier Information");
-            System.out.println(list.get(id));
+            System.out.println(supplierMap.get(id));
         } else {
             System.out.println("Read/View Unsuccessful: at.campus02.model.Supplier ID does not exist");
         }
