@@ -52,10 +52,10 @@ public class MainClass {
         }
 
         case 2:
-          int index = inputPurchase.removePurchase(purchases);
-          if (index == -1) {
-            //System.out.println("Unsuccessful. at.campus02.model.Purchase order does not exist");
-          } else purchases.remove(index);
+          Purchase purchase = inputPurchase.removePurchase(purchases);
+          if (purchase != null) {
+            purchases.remove(purchase.getPurchaseNo());
+          }
           break;
 
         case 3:
@@ -74,10 +74,12 @@ public class MainClass {
         }
 
         case 5:
-          int pos = inputSupplier.deleteSupplier(suppliers);
-          if (pos == -1) {
-            System.out.println("at.campus02.model.Supplier Doesnt Exist");
-          } else suppliers.remove(pos);
+          Supplier supplier = inputSupplier.deleteSupplier(suppliers);
+          if (supplier == null) {
+            suppliers.remove(supplier.getSupplierId());
+          } else {
+            System.out.println("No Supplier found");
+          }
           break;
 
         case 6:

@@ -184,7 +184,7 @@ public class InputPurchase {
       return newPurchase;
     }
 
-  public  int removePurchase(Map <Integer, Purchase > list) {
+  public  Purchase removePurchase(Map <Integer, Purchase > purchaseMap) {
       System.out.println("*** Remove at.campus02.model.Purchase ***");
       System.out.println("Enter at.campus02.model.Purchase Number");
 
@@ -193,32 +193,31 @@ public class InputPurchase {
       //If input empty
       if (number.isEmpty() || number.equals(" ")) {
         System.out.println("Unsuccessful. Cannot leave at.campus02.model.Purchase No field empty");
-        return -1;
+        return null;
       }
 
       try {
-        int temp = Integer.parseInt(number);
+          int purchaseNo = Integer.parseInt(number);
 
-        //Wrong at.campus02.model.Purchase Number format (should be a 3-digit number
-        if (temp > 999) {
-          System.out.println("Unsuccessful. Invalid purchase Number");
-          return -1;
-        }
+          //Wrong at.campus02.model.Purchase Number format (should be a 3-digit number
+          if (purchaseNo > 999) {
 
-        for (int i = 0; i < list.size(); i++) {
-          if (list.get(i).getPurchaseNo() == temp) {
-            System.out.println("at.campus02.model.Purchase order No " + temp + " Deleted\n");
-            return i;
+              return null;
           }
-        }
-        System.out.println("Unsuccessful. at.campus02.model.Purchase order does not exist");
+
+          if (purchaseMap.containsKey(purchaseNo)) {
+              System.out.println("at.campus02.model.Purchase order No " + purchaseNo + " Deleted\n");
+              return purchaseMap.get(purchaseNo);
+          } else {
+              System.out.println("Unsuccessful. Invalid purchase Number");
+          }
       }
       //If String given for at.campus02.model.Purchase Number
       catch (NumberFormatException e) {
         System.out.println("Unsuccessful. Invalid purchase Number Format");
       }
 
-      return -1;
+      return null;
     }
 
   public void viewPurchase(Map <Integer, Purchase > list) {
